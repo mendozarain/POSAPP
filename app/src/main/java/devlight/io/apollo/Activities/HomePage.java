@@ -37,7 +37,7 @@ public class HomePage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
         initUI();
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        /*sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);*/
 
     }
 
