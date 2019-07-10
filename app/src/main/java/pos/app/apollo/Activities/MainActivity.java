@@ -1,4 +1,4 @@
-package devlight.io.apollo;
+package pos.app.apollo.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,8 +7,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.view.View;
 
-import devlight.io.apollo.Activities.HomePage;
-import devlight.io.sample.R;
+import pos.app.sample.R;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {

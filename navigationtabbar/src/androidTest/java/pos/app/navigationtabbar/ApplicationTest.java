@@ -1,4 +1,4 @@
-package devlight.io.apollo;
+package pos.app.navigationtabbar;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

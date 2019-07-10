@@ -47,7 +47,7 @@ dependencies {
 
 def siteUrl = 'https://github.com/DevLight-Mobile-Agency/NavigationTabBar'
 def gitUrl = 'https://github.com/DevLight-Mobile-Agency/NavigationTabBar.git'
-group = "devlight.io"
+group = "pos.app"
 
 install {
     repositories.mavenInstaller {

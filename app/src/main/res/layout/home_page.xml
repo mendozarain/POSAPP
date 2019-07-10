@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <devlight.io.library.ntb.NavigationTabBar
+            <pos.app.library.ntb.NavigationTabBar
                 android:id="@+id/ntb_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"

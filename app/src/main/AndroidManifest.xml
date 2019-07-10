@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:tools="http://schemas.android.com/tools"
-    package="devlight.io.sample"
+    package="pos.app.sample"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="devlight.io.apollo.Activities.HomePage">
+        <activity android:name="pos.app.apollo.Activities.HomePage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package devlight.io.library.ntb;
+package pos.app.library.ntb;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -63,7 +63,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import devlight.io.library.behavior.NavigationTabBarBehavior;
+import pos.app.library.behavior.NavigationTabBarBehavior;
 
 /**
  * Created by GIGAMOLE on 24.03.2016.

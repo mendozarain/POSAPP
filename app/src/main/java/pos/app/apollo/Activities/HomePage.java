@@ -1,10 +1,9 @@
-package devlight.io.apollo.Activities;
+package pos.app.apollo.Activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,19 +12,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import devlight.io.library.ntb.NavigationTabBar;
-import devlight.io.apollo.AutoGrid;
-import devlight.io.sample.R;
+import pos.app.library.ntb.NavigationTabBar;
+import pos.app.apollo.Helpers.AutoGridHelper;
+import pos.app.sample.R;
 
 
 public class HomePage extends Activity {
@@ -65,7 +61,7 @@ public class HomePage extends Activity {
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
-                int mNoOfColumns = AutoGrid.calculateNoOfColumns(getApplicationContext(),190);
+                int mNoOfColumns = AutoGridHelper.calculateNoOfColumns(getApplicationContext(), 190);
 
                 if(position != 3) {
 
