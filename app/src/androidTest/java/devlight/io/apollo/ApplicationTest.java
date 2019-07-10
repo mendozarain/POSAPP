@@ -1,4 +1,4 @@
-package devlight.io.apollp;
+package devlight.io.apollo;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

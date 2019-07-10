@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,17 +29,17 @@ import devlight.io.sample.R;
 
 
 public class HomePage extends Activity {
-    @BindView(R.id.bottom_sheet)
-    LinearLayout layoutBottomSheet;
 
-    BottomSheetBehavior sheetBehavior;
+    private BottomSheetBehavior mBottomSheetBehavior;
+
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
         initUI();
-       /* sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);*/
+        bottomsheet();
 
     }
 
@@ -158,6 +160,8 @@ public class HomePage extends Activity {
             }
         });
 
+
+
        /* findViewById(R.id.mask).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -184,6 +188,7 @@ public class HomePage extends Activity {
 
     public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
         private Context mContext;
+
 
 
 
@@ -216,6 +221,58 @@ public class HomePage extends Activity {
                 txt = (TextView) itemView.findViewById(R.id.item_name);
             }
         }
+    }
+
+    public void bottomsheet() {
+
+
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        ImageView buttonExpand = findViewById(R.id.button_expand);
+
+
+        buttonExpand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+
+            }
+        });
+
+
+       /* mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        mTextViewState.setText("Collapsed");
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        mTextViewState.setText("Dragging...");
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        mTextViewState.setText("Expanded");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        mTextViewState.setText("Hidden");
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        mTextViewState.setText("Settling...");
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                mTextViewState.setText("Sliding...");
+            }
+        });*/
     }
 
 
