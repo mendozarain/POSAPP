@@ -10,12 +10,13 @@
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="56dp"
+    app:behavior_peekHeight="50dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
+        android:id="@+id/transitionContainer"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
@@ -26,7 +27,6 @@
             android:layout_width="0dp"
 
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="Total"
             android:textColor="#444"
@@ -40,9 +40,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
             android:layout_marginBottom="8dp"
             android:gravity="right"
             android:text="₱1000.00"
@@ -54,17 +53,18 @@
 
         <ImageButton
             android:id="@+id/button_expand"
-            android:layout_width="35dp"
+            android:layout_width="15dp"
 
-            android:layout_height="35dp"
+            android:layout_height="15dp"
 
-            android:background="@drawable/circle_btn"
 
-            app:srcCompat="@drawable/ic_arrow_downward_black_24dp"
-
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_up_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
 

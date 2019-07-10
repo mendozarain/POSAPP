@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,18 +17,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.transitionseverywhere.Rotate;
+import com.transitionseverywhere.TransitionManager;
 
 import java.util.ArrayList;
 
-import pos.app.library.ntb.NavigationTabBar;
 import pos.app.apollo.Helpers.AutoGridHelper;
+import pos.app.apollo.Helpers.OdooHelper;
+import pos.app.library.ntb.NavigationTabBar;
 import pos.app.sample.R;
 
 
 public class HomePage extends Activity {
 
     private BottomSheetBehavior mBottomSheetBehavior;
-
+    OdooHelper odooHelper = new OdooHelper();
 
 
     @Override
@@ -36,6 +40,9 @@ public class HomePage extends Activity {
         setContentView(R.layout.home_page);
         initUI();
         bottomsheet();
+        odooHelper.odooConnectionTest(getApplicationContext(), this);
+
+
 
     }
 
@@ -222,53 +229,80 @@ public class HomePage extends Activity {
     public void bottomsheet() {
 
 
-        View bottomSheet = findViewById(R.id.bottom_sheet);
+        final View bottomSheet = findViewById(R.id.bottom_sheet);
+        final ViewGroup transitionContainer = findViewById(R.id.transitionContainer);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
-        ImageView buttonExpand = findViewById(R.id.button_expand);
-
+        final ImageView buttonExpand = findViewById(R.id.button_expand);
 
         buttonExpand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                TransitionManager.beginDelayedTransition(transitionContainer, new Rotate());
+
+
                 if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                } else {
+                    buttonExpand.setRotation(0);
+
+                }
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    buttonExpand.setRotation(180);
                 }
 
             }
         });
 
 
-       /* mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        transitionContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                TransitionManager.beginDelayedTransition(transitionContainer, new Rotate());
+
+
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    buttonExpand.setRotation(0);
+
+                }
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    buttonExpand.setRotation(180);
+                }
+
+            }
+        });
+
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        mTextViewState.setText("Collapsed");
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        mTextViewState.setText("Dragging...");
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        mTextViewState.setText("Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        mTextViewState.setText("Hidden");
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        mTextViewState.setText("Settling...");
-                        break;
+                TransitionManager.beginDelayedTransition(transitionContainer, new Rotate());
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    buttonExpand.setRotation(180);
                 }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    buttonExpand.setRotation(0);
+                }
+
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+
+
+
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                mTextViewState.setText("Sliding...");
+
             }
-        });*/
+        });
     }
 
 
