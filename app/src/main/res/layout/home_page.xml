@@ -15,6 +15,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#EAEEF0">
@@ -29,8 +30,6 @@
                 android:id="@+id/ntb_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:ntb_bg_color="#fff"
-                app:ntb_title_size="15sp"
                 app:ntb_badge_bg_color="#ffff0000"
                 app:ntb_badge_gravity="bottom"
                 app:ntb_badge_position="right"
@@ -38,10 +37,12 @@
                 app:ntb_badge_title_color="#ffffffff"
                 app:ntb_badge_use_typeface="true"
                 app:ntb_badged="true"
-                app:ntb_title_mode="active"
-                app:ntb_titled="true"
+                app:ntb_bg_color="#fff"
                 app:ntb_scaled="false"
-                app:ntb_typeface="fonts/agency.ttf"/>
+                app:ntb_title_mode="active"
+                app:ntb_title_size="15sp"
+                app:ntb_titled="true"
+                app:ntb_typeface="fonts/agency.ttf" />
 
         </FrameLayout>
 
@@ -65,8 +66,8 @@
 
         android:layout_marginRight="20sp"
         android:clickable="true"
-        app:layout_anchor="@+id/vp_horizontal_ntb"
-        app:layout_anchorGravity="end|top"
+        app:layout_anchor="@+id/appBarLayout"
+        app:layout_anchorGravity="end|center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

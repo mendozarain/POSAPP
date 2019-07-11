@@ -1,8 +1,10 @@
 package pos.app.apollo.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,10 +31,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import io.github.mthli.sugartask.SugarTask;
-import pos.app.apollo.Adapters.ClothesAdapter;
-import pos.app.apollo.Adapters.JewelryAdapter;
-import pos.app.apollo.Adapters.ShoeAdapter;
+import pos.app.apollo.Adapters.ProductAdapter;
 import pos.app.apollo.Helpers.AutoGridHelper;
 import pos.app.apollo.Helpers.OdooConnect;
 import pos.app.apollo.Helpers.OdooHelper;
@@ -66,7 +67,6 @@ public class HomePage extends Activity {
         setContentView(R.layout.home_page);
 
         initUI();
-
         bottomsheet();
 
 
@@ -75,6 +75,20 @@ public class HomePage extends Activity {
             @Override
             public void onClick(View view) {
                 // Click action
+
+                final AlertDialog dialog = new SpotsDialog(HomePage.this);
+                dialog.show();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        dialog.dismiss();
+
+
+                    }
+                }, 500);
+
                 initUI();
             }
         });
@@ -185,17 +199,17 @@ public class HomePage extends Activity {
 
 
                                 if (position == 0) {
-                                    recyclerView.setAdapter(new ClothesAdapter(getBaseContext(), getApplicationContext(), clothes));
+                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), clothes));
 
                                 }
                                 if (position == 1) {
 
-                                    recyclerView.setAdapter(new ShoeAdapter(getBaseContext(), getApplicationContext(), shoes));
+                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), shoes));
                                 }
 
                                 if (position == 2) {
 
-                                    recyclerView.setAdapter(new JewelryAdapter(getBaseContext(), getApplicationContext(), jewelry));
+                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), jewelry));
                                 }
 
 

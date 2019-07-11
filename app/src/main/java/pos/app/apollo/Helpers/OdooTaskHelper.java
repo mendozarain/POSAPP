@@ -92,7 +92,7 @@ public class OdooTaskHelper extends AsyncTask<String, String, String> {
 
             JSONObject jsonobj = jsonArray.getJSONObject(i);
 
-            personModelList.add(new ProductModel(jsonobj.getString("name"), jsonobj.getDouble("price"), jsonobj.getInt("category"), jsonobj.getString("image")));
+            personModelList.add(new ProductModel(jsonobj.getString("name"), jsonobj.getDouble("price"), jsonobj.getInt("category"), jsonobj.getString("category")));
 
         }
 
