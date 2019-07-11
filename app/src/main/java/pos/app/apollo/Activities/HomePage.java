@@ -66,6 +66,20 @@ public class HomePage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
 
+
+        final AlertDialog dialog = new SpotsDialog(HomePage.this);
+        dialog.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                dialog.dismiss();
+
+
+            }
+        }, 500);
+
         initUI();
         bottomsheet();
 
