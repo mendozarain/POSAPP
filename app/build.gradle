@@ -31,23 +31,45 @@ dependencies {
     implementation project(':navigationtabbar')
 //    compile 'com.github.pos.navigationtabbar:navigationtabbar:1.2.3'
 
+    // Transition Anywhere
     implementation "com.andkulikov:transitionseverywhere:1.8.1"
+
+    //Glide Image Loader
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+
+    //Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //Recycleview
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+
+    //Gson
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    //Cardview
     implementation 'com.android.support:cardview-v7:27.1.1'
+
+    //Appcompat and other android stuff
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'org.apache.xmlrpc:xmlrpc:3.1.3'
-    implementation 'com.github.mthli:SugarTask:v0.4'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:customtabs:27.1.1'
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.github.gturri:aXMLRPC:master-SNAPSHOT'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    //XMLRPC
+    implementation 'org.apache.xmlrpc:xmlrpc:3.1.3'
+    implementation 'com.github.gturri:aXMLRPC:master-SNAPSHOT'
+
+    //SugarTask Asynctask alternative
+    implementation 'com.github.mthli:SugarTask:v0.4'
+
+    // for testing
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+
+    // Fancy Toast
+    implementation 'com.github.Shashank02051997:FancyToast-Android:0.1.6'
 }

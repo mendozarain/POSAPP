@@ -1,10 +1,11 @@
 package pos.app.apollo.Activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,16 +15,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.transitionseverywhere.Rotate;
 import com.transitionseverywhere.TransitionManager;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.github.mthli.sugartask.SugarTask;
+import pos.app.apollo.Adapters.ProductAdapters;
 import pos.app.apollo.Helpers.AutoGridHelper;
+import pos.app.apollo.Helpers.OdooConnect;
 import pos.app.apollo.Helpers.OdooHelper;
+import pos.app.apollo.Models.ProductModel;
 import pos.app.library.ntb.NavigationTabBar;
 import pos.app.sample.R;
 
@@ -34,17 +44,26 @@ public class HomePage extends Activity {
     OdooHelper odooHelper = new OdooHelper();
 
 
+    final String url = "192.168.99.125";
+    final int port = 8011;
+    final String db = "odoo11_pos";
+    final String username = "odoo_admin@apollo.com.ph";
+    final String password = "ap0ll0";
+
+
+    public List<ProductModel> productList = new ArrayList<>();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
+
         initUI();
         bottomsheet();
-        odooHelper.odooConnectionTest(getApplicationContext(), this);
-
 
 
     }
+
 
     private void initUI() {
 
@@ -68,41 +87,91 @@ public class HomePage extends Activity {
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
-                int mNoOfColumns = AutoGridHelper.calculateNoOfColumns(getApplicationContext(), 190);
+                final int mNoOfColumns = AutoGridHelper.calculateNoOfColumns(getApplicationContext(), 190);
 
-                if(position != 3) {
+                final View view = LayoutInflater.from(
+                        getBaseContext()).inflate(R.layout.item_vp_list, null, false);
 
-                    final View view = LayoutInflater.from(
-                            getBaseContext()).inflate(R.layout.item_vp_list, null, false);
+                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
 
-                    final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new GridLayoutManager( getBaseContext(), mNoOfColumns));
-                   /* recyclerView.setLayoutManager(new LinearLayoutManager(
-                                    getBaseContext(), LinearLayoutManager.VERTICAL, false
-                            )
-                    );*/
-                    recyclerView.setAdapter(new RecycleAdapter());
+
+                SugarTask.with(HomePage.this) // Activity|FragmentActivity(v4)|Fragment|Fragment(v4)
+                        .assign(new SugarTask.TaskDescription() {
+                            @Override
+                            public String onBackground() {
+
+                                List<ProductModel> productList = new ArrayList<>();
+
+                                OdooConnect oc = OdooConnect.connect(url, port, db, username, password);
+
+
+                                String data = oc.call("product.product", "sync_product_category_data");
+
+
+                                try {
+                                    productList = (ArrayList<ProductModel>) addData(String.valueOf(data));
+                                    //Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
+
+                                    // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
+                                } catch (JSONException e) {
+                                    Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
+                                    // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                                }
+
+
+                                return data;
+                            }
+                        })
+                        .handle(new SugarTask.MessageListener() {
+                            @Override
+                            public void handleMessage(@NonNull Message message) {
+
+                            }
+                        })
+                        .finish(new SugarTask.FinishListener() {
+                            @Override
+                            public void onFinish(@Nullable Object result) {
+
+
+                                try {
+
+                                    productList = (ArrayList<ProductModel>) addData(String.valueOf(result));
+                                    // Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
+
+
+                                    // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
+                                } catch (JSONException e) {
+                                    Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
+                                    // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                                }
+
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), mNoOfColumns));
+                                recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), productList));
+                                // FancyToast.makeText(HomePage.this,"Huhu"+ productList.size() ,FancyToast.LENGTH_LONG,FancyToast.INFO,true).show();
+                                // If WorkerThread finish without Exception and lifecycle safety,
+                                // deal with your WorkerThread result at here.
+                            }
+                        })
+                        .broken(new SugarTask.BrokenListener() {
+                            @Override
+                            public void onBroken(@NonNull Exception e) {
+                                FancyToast.makeText(HomePage.this, "Error" + e, FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                                // If WorkerThread finish with Exception and lifecycle safety,
+                                // deal with Exception at here.
+                            }
+                        })
+                        .execute();
+
+
+
 
                     container.addView(view);
-                    return view;
-                }
-                else {
-                    final View view = LayoutInflater.from(
-                            getBaseContext()).inflate(R.layout.cart, null, false);
 
-                    final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new GridLayoutManager( getBaseContext(), mNoOfColumns));
-                    /*recyclerView.setLayoutManager(new LinearLayoutManager(
-                                    getBaseContext(), LinearLayoutManager.VERTICAL, false
-                            )
-                    );*/
-                    recyclerView.setAdapter(new RecycleAdapter());
 
-                    container.addView(view);
-                    return view;
-                }
+                return view;
+
+
             }
         });
 
@@ -189,42 +258,7 @@ public class HomePage extends Activity {
         });*/
     }
 
-    public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
-        private Context mContext;
 
-
-
-
-        @Override
-        public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            final View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_list, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            holder.txt.setText(String.format("Item #%d", position));
-            Glide.with(getApplicationContext()).load("https://via.placeholder.com/160x190").into(holder.item_img);
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 20;
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ImageView item_img;
-            public TextView txt;
-
-            public ViewHolder(final View itemView) {
-                super(itemView);
-                item_img = (ImageView) itemView.findViewById(R.id.item_img);
-                txt = (TextView) itemView.findViewById(R.id.item_name);
-            }
-        }
-    }
 
     public void bottomsheet() {
 
@@ -295,7 +329,6 @@ public class HomePage extends Activity {
                 }
 
 
-
             }
 
             @Override
@@ -304,6 +337,28 @@ public class HomePage extends Activity {
             }
         });
     }
+
+    public List<ProductModel> addData(String result) throws JSONException {
+        List<ProductModel> personModelList = new ArrayList<>();
+
+        JSONObject jsnobject = new JSONObject(result);
+        JSONArray jsonArray = jsnobject.getJSONArray("products");
+        //JSONArray jsonarray = new JSONArray(result);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            JSONObject jsonobj = jsonArray.getJSONObject(i);
+
+            personModelList.add(new ProductModel(jsonobj.getString("name"), jsonobj.getDouble("price"), jsonobj.getInt("category")));
+
+        }
+
+        productList = personModelList;
+
+
+        return personModelList;
+    }
+
 
 
 }
