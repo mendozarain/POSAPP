@@ -1,8 +1,11 @@
 package pos.app.apollo.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +42,23 @@ public class ProductAdapters extends RecyclerView.Adapter<ProductAdapters.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductModel productModel = productModelList.get(position);
+
+
+        byte[] decodedString = Base64.decode(productModel.getImage().toString(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+
         holder.tvName.setText(String.format("" + productModel.getName()));
         holder.tvPrice.setText(String.format("" + productModel.getPrice()));
 
-        Glide.with(applicationContext).load("https://via.placeholder.com/160x190").into(holder.imgItem);
+
+        Glide.with(applicationContext).asBitmap().load(decodedByte).into(holder.imgItem);
     }
 
 
     @Override
     public int getItemCount() {
-        return 20;
+        return productModelList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

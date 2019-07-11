@@ -52,6 +52,10 @@ public class HomePage extends Activity {
 
 
     public List<ProductModel> productList = new ArrayList<>();
+    public List<ProductModel> clothes = new ArrayList<>();
+    public List<ProductModel> shoes = new ArrayList<>();
+    public List<ProductModel> jewelry = new ArrayList<>();
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class HomePage extends Activity {
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return 4;
+                return 3;
             }
 
             @Override
@@ -145,9 +149,41 @@ public class HomePage extends Activity {
                                     // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
                                 }
 
+                                for (ProductModel item : productList) {
+                                    int category = item.getCategory();
+                                    if (category == 3) {
+                                        shoes.add(item);
+                                    }
+                                    if (category == 4) {
+                                        jewelry.add(item);
+                                    }
+                                    if (category == 5) {
+                                        clothes.add(item);
+                                    }
+
+                                }
+
+
                                 recyclerView.setHasFixedSize(true);
                                 recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), mNoOfColumns));
-                                recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), productList));
+
+                                // recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), productList));
+
+                                if (position == 0) {
+
+                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), clothes));
+                                }
+                                if (position == 1) {
+
+                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), shoes));
+                                }
+
+                                if (position == 2) {
+
+                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), jewelry));
+                                }
+
+
                                 // FancyToast.makeText(HomePage.this,"Huhu"+ productList.size() ,FancyToast.LENGTH_LONG,FancyToast.INFO,true).show();
                                 // If WorkerThread finish without Exception and lifecycle safety,
                                 // deal with your WorkerThread result at here.
@@ -200,13 +236,7 @@ public class HomePage extends Activity {
                         .title("Jewelry")
                         .build()
         );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic__cart),
-                        Color.parseColor(colors[4]))
-                        .title("Cart")
-                        .build()
-        );
+
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 2);
 
@@ -349,7 +379,7 @@ public class HomePage extends Activity {
 
             JSONObject jsonobj = jsonArray.getJSONObject(i);
 
-            personModelList.add(new ProductModel(jsonobj.getString("name"), jsonobj.getDouble("price"), jsonobj.getInt("category")));
+            personModelList.add(new ProductModel(jsonobj.getString("name"), jsonobj.getDouble("price"), jsonobj.getInt("category"), jsonobj.getString("image")));
 
         }
 
