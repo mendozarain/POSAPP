@@ -72,4 +72,7 @@ dependencies {
 
     // Fancy Toast
     implementation 'com.github.Shashank02051997:FancyToast-Android:0.1.6'
+
+    //Progress bar
+    implementation 'com.github.d-max:spots-dialog:0.7@aar'
 }

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.mthli.sugartask.SugarTask;
-import pos.app.apollo.Adapters.ProductAdapters;
+import pos.app.apollo.Adapters.ClothesAdapter;
+import pos.app.apollo.Adapters.JewelryAdapter;
+import pos.app.apollo.Adapters.ShoeAdapter;
 import pos.app.apollo.Helpers.AutoGridHelper;
 import pos.app.apollo.Helpers.OdooConnect;
 import pos.app.apollo.Helpers.OdooHelper;
@@ -63,8 +66,18 @@ public class HomePage extends Activity {
         setContentView(R.layout.home_page);
 
         initUI();
+
         bottomsheet();
 
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Click action
+                initUI();
+            }
+        });
 
     }
 
@@ -91,6 +104,8 @@ public class HomePage extends Activity {
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
+
+
                 final int mNoOfColumns = AutoGridHelper.calculateNoOfColumns(getApplicationContext(), 190);
 
                 final View view = LayoutInflater.from(
@@ -130,6 +145,7 @@ public class HomePage extends Activity {
                             @Override
                             public void handleMessage(@NonNull Message message) {
 
+
                             }
                         })
                         .finish(new SugarTask.FinishListener() {
@@ -167,21 +183,28 @@ public class HomePage extends Activity {
                                 recyclerView.setHasFixedSize(true);
                                 recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), mNoOfColumns));
 
-                                // recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), productList));
 
                                 if (position == 0) {
+                                    recyclerView.setAdapter(new ClothesAdapter(getBaseContext(), getApplicationContext(), clothes));
 
-                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), clothes));
                                 }
                                 if (position == 1) {
 
-                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), shoes));
+                                    recyclerView.setAdapter(new ShoeAdapter(getBaseContext(), getApplicationContext(), shoes));
                                 }
 
                                 if (position == 2) {
 
-                                    recyclerView.setAdapter(new ProductAdapters(getBaseContext(), getApplicationContext(), jewelry));
+                                    recyclerView.setAdapter(new JewelryAdapter(getBaseContext(), getApplicationContext(), jewelry));
                                 }
+
+
+                                container.addView(view);
+
+                                clothes = new ArrayList<>();
+                                shoes = new ArrayList<>();
+                                jewelry = new ArrayList<>();
+
 
 
                                 // FancyToast.makeText(HomePage.this,"Huhu"+ productList.size() ,FancyToast.LENGTH_LONG,FancyToast.INFO,true).show();
@@ -200,13 +223,7 @@ public class HomePage extends Activity {
                         .execute();
 
 
-
-
-                    container.addView(view);
-
-
                 return view;
-
 
             }
         });

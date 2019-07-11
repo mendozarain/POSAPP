@@ -19,12 +19,12 @@ import java.util.List;
 import pos.app.apollo.Models.ProductModel;
 import pos.app.sample.R;
 
-public class ProductAdapters extends RecyclerView.Adapter<ProductAdapters.ViewHolder> {
+public class ShoeAdapter extends RecyclerView.Adapter<ShoeAdapter.ViewHolder> {
     private Context baseContext;
     private Context applicationContext;
     private List<ProductModel> productModelList;
 
-    public ProductAdapters(Context mBaseContext, Context mApplicationContext, List<ProductModel> productModelList) {
+    public ShoeAdapter(Context mBaseContext, Context mApplicationContext, List<ProductModel> productModelList) {
         baseContext = mBaseContext;
         applicationContext = mApplicationContext;
         this.productModelList = productModelList;
@@ -34,7 +34,7 @@ public class ProductAdapters extends RecyclerView.Adapter<ProductAdapters.ViewHo
 
 
     @Override
-    public ProductAdapters.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+    public ShoeAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         final View view = LayoutInflater.from(baseContext).inflate(R.layout.item_list, parent, false);
         return new ViewHolder(view);
     }
