@@ -29,7 +29,7 @@
             <pos.app.library.ntb.NavigationTabBar
                 android:id="@+id/ntb_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="90dp"
                 app:ntb_badge_bg_color="#ffff0000"
                 app:ntb_badge_gravity="bottom"
                 app:ntb_badge_position="right"
@@ -66,8 +66,8 @@
 
         android:layout_marginRight="20sp"
         android:clickable="true"
-        app:layout_anchor="@+id/appBarLayout"
-        app:layout_anchorGravity="end|center"
+        app:layout_anchor="@+id/vp_horizontal_ntb"
+        app:layout_anchorGravity="end|top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -67,50 +66,101 @@ public class HomePage extends Activity {
         setContentView(R.layout.home_page);
 
 
-        final AlertDialog dialog = new SpotsDialog(HomePage.this);
-        dialog.show();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                dialog.dismiss();
-
-
-            }
-        }, 500);
-
         initUI();
-        bottomsheet();
+        loaditems();
 
+        bottomsheet();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Click action
-
-                final AlertDialog dialog = new SpotsDialog(HomePage.this);
-                dialog.show();
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        dialog.dismiss();
-
-
-                    }
-                }, 500);
-
-                initUI();
+                loaditems();
             }
         });
 
     }
 
 
+    public void loaditems() {
+
+
+        final AlertDialog dialog = new SpotsDialog(HomePage.this);
+        dialog.show();
+
+
+        SugarTask.with(HomePage.this) // Activity|FragmentActivity(v4)|Fragment|Fragment(v4)
+                .assign(new SugarTask.TaskDescription() {
+                    @Override
+                    public String onBackground() {
+
+                        List<ProductModel> productList = new ArrayList<>();
+
+                        OdooConnect oc = OdooConnect.connect(url, port, db, username, password);
+
+
+                        String data = oc.call("product.product", "sync_product_category_data");
+
+
+                        try {
+                            productList = (ArrayList<ProductModel>) addData(String.valueOf(data));
+                            //Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
+
+                            // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
+                        } catch (JSONException e) {
+                            Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
+                            // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                        }
+
+
+                        return data;
+                    }
+                })
+                .handle(new SugarTask.MessageListener() {
+                    @Override
+                    public void handleMessage(@NonNull Message message) {
+
+
+                    }
+                })
+                .finish(new SugarTask.FinishListener() {
+                    @Override
+                    public void onFinish(@Nullable Object result) {
+                        initUI();
+
+
+                        try {
+
+                            productList = (ArrayList<ProductModel>) addData(String.valueOf(result));
+                            // Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
+
+
+                            // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
+                        } catch (JSONException e) {
+                            Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
+                            // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
+                        }
+
+                        dialog.dismiss();
+                        // FancyToast.makeText(HomePage.this,"Huhu"+ productList.size() ,FancyToast.LENGTH_LONG,FancyToast.INFO,true).show();
+                        // If WorkerThread finish without Exception and lifecycle safety,
+                        // deal with your WorkerThread result at here.
+                    }
+                })
+                .broken(new SugarTask.BrokenListener() {
+                    @Override
+                    public void onBroken(@NonNull Exception e) {
+                        FancyToast.makeText(HomePage.this, "Error" + e, FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                        // If WorkerThread finish with Exception and lifecycle safety,
+                        // deal with Exception at here.
+                    }
+                })
+                .execute();
+    }
+
     private void initUI() {
+
 
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
@@ -141,114 +191,47 @@ public class HomePage extends Activity {
 
                 final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
 
+                for (ProductModel item : productList) {
+                    int category = item.getCategory();
+                    if (category == 3) {
+                        shoes.add(item);
+                    }
+                    if (category == 4) {
+                        jewelry.add(item);
+                    }
+                    if (category == 5) {
+                        clothes.add(item);
+                    }
 
-                SugarTask.with(HomePage.this) // Activity|FragmentActivity(v4)|Fragment|Fragment(v4)
-                        .assign(new SugarTask.TaskDescription() {
-                            @Override
-                            public String onBackground() {
-
-                                List<ProductModel> productList = new ArrayList<>();
-
-                                OdooConnect oc = OdooConnect.connect(url, port, db, username, password);
-
-
-                                String data = oc.call("product.product", "sync_product_category_data");
-
-
-                                try {
-                                    productList = (ArrayList<ProductModel>) addData(String.valueOf(data));
-                                    //Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
-
-                                    // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
-                                } catch (JSONException e) {
-                                    Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
-                                    // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
-                                }
+                }
 
 
-                                return data;
-                            }
-                        })
-                        .handle(new SugarTask.MessageListener() {
-                            @Override
-                            public void handleMessage(@NonNull Message message) {
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), mNoOfColumns));
 
 
-                            }
-                        })
-                        .finish(new SugarTask.FinishListener() {
-                            @Override
-                            public void onFinish(@Nullable Object result) {
+                if (position == 0) {
+                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), clothes));
+
+                }
+                if (position == 1) {
+
+                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), shoes));
+                }
+
+                if (position == 2) {
+
+                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), jewelry));
+                }
 
 
-                                try {
+                container.addView(view);
 
-                                    productList = (ArrayList<ProductModel>) addData(String.valueOf(result));
-                                    // Toast.makeText(context, "size"+productList.size(), Toast.LENGTH_SHORT).show();
-
-
-                                    // FancyToast.makeText(context,"Success",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,true).show();
-                                } catch (JSONException e) {
-                                    Toast.makeText(HomePage.this, "Error: " + e, Toast.LENGTH_SHORT).show();
-                                    // FancyToast.makeText(context,"Error: ",FancyToast.LENGTH_LONG,FancyToast.ERROR,true).show();
-                                }
-
-                                for (ProductModel item : productList) {
-                                    int category = item.getCategory();
-                                    if (category == 3) {
-                                        shoes.add(item);
-                                    }
-                                    if (category == 4) {
-                                        jewelry.add(item);
-                                    }
-                                    if (category == 5) {
-                                        clothes.add(item);
-                                    }
-
-                                }
+                clothes = new ArrayList<>();
+                shoes = new ArrayList<>();
+                jewelry = new ArrayList<>();
 
 
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), mNoOfColumns));
-
-
-                                if (position == 0) {
-                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), clothes));
-
-                                }
-                                if (position == 1) {
-
-                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), shoes));
-                                }
-
-                                if (position == 2) {
-
-                                    recyclerView.setAdapter(new ProductAdapter(getBaseContext(), getApplicationContext(), jewelry));
-                                }
-
-
-                                container.addView(view);
-
-                                clothes = new ArrayList<>();
-                                shoes = new ArrayList<>();
-                                jewelry = new ArrayList<>();
-
-
-
-                                // FancyToast.makeText(HomePage.this,"Huhu"+ productList.size() ,FancyToast.LENGTH_LONG,FancyToast.INFO,true).show();
-                                // If WorkerThread finish without Exception and lifecycle safety,
-                                // deal with your WorkerThread result at here.
-                            }
-                        })
-                        .broken(new SugarTask.BrokenListener() {
-                            @Override
-                            public void onBroken(@NonNull Exception e) {
-                                FancyToast.makeText(HomePage.this, "Error" + e, FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
-                                // If WorkerThread finish with Exception and lifecycle safety,
-                                // deal with Exception at here.
-                            }
-                        })
-                        .execute();
 
 
                 return view;
